@@ -9,7 +9,6 @@ public class World : MonoBehaviour
     public static World instance = null;
     public SceneNode head = null;
     public GameObject player;
-    List<GameObject> wallUnits = new();
     List<GameObject> walls;
     public List<GameObject> boundary = new();
 
