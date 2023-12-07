@@ -19,7 +19,7 @@ public class World : MonoBehaviour
             instance = this;
         Debug.Assert(head);
         Debug.Assert(player);
-        
+
         walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
         Debug.Assert(walls != null);
     }
@@ -28,23 +28,12 @@ public class World : MonoBehaviour
     void Update()
     {
         UpdatePlayerMatrix();
-        MoveWalls();
     }
 
     public void UpdatePlayerMatrix()
     {
         var m = Matrix4x4.identity;
         head.GetSelfMatrix(ref m);
-    }
-
-    void MoveWalls()
-    {
-        foreach(var wallUnit in wallUnits)
-        {
-            var deltaP = Vector3.zero;
-            // TODO: Some distance modification for deltaP
-            wallUnit.transform.position += deltaP;
-        }
     }
 
     public bool HasContactedTerrain(Vector3 pt, float radius)
