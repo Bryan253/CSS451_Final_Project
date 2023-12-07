@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class World : MonoBehaviour
     public SceneNode head = null;
     public GameObject player;
     List<GameObject> wallUnits = new();
-    public List<GameObject> walls = new();
+    List<GameObject> walls;
     public List<GameObject> boundary = new();
 
     void Awake()
@@ -18,6 +19,8 @@ public class World : MonoBehaviour
             instance = this;
         Debug.Assert(head);
         Debug.Assert(player);
+        
+        walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
         Debug.Assert(walls != null);
     }
 
