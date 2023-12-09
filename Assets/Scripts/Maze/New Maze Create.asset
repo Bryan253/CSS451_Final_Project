@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e35823131f8696e47a1c9b2fa236314c, type: 3}
+  m_Name: New Maze Create
+  m_EditorClassIdentifier: 
+  deadEnd: {fileID: 6665787751458213635, guid: ca4b2ae669e0cc8488e479c6c3622957, type: 3}
+  passage: {fileID: 5098551138465036544, guid: 79776f7e500302743b0a6f10e76811d9, type: 3}
+  corner: {fileID: 5846155071620273527, guid: e8c8f07f95b87e94b9d78d65045c983d, type: 3}
+  tPassage: {fileID: 1070427835886422128, guid: 01d033855fd33e447b4a7adc124b08e6, type: 3}
+  xPassage: {fileID: 356741906594939213, guid: 16ef6d817e84c25418540b503d06781f, type: 3}
