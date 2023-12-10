@@ -10,6 +10,7 @@ public class World : MonoBehaviour
     public SceneNode baseNode = null;
     public GameObject player;
     List<GameObject> walls;
+    List<GameObject> orbs;
 
     void Awake()
     {
@@ -23,6 +24,7 @@ public class World : MonoBehaviour
     {
         player.transform.position = GameObject.Find("Corner(Clone)").transform.position;
         walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
+        orbs = GameObject.FindGameObjectsWithTag("Orb").ToList();
     }
 
     void Update()
@@ -38,16 +40,20 @@ public class World : MonoBehaviour
 
     public bool HasContactedTerrain(Vector3 pt, float radius)
     {
+        // Check contact with orbs
+        foreach(var orb in orbs)
+            if(HasContactedOrb(pt, radius, orb))
+                return true;
+        
         // Check contact with each wall
         foreach(var wall in walls)
-            if(HasContacted(pt, radius, wall))
+            if(HasContactedWall(pt, radius, wall))
                 return true;
         
         return false;
     }
 
-    // Assumes target is a quad
-    public bool HasContacted(Vector3 pt, float radius, GameObject target)
+    bool HasContactedWall(Vector3 pt, float radius, GameObject target)
     {
         // Find distance between pt and infinte plane
         var targetPt = target.transform.position;
@@ -74,4 +80,19 @@ public class World : MonoBehaviour
         
         return true;
     }
+
+    bool HasContactedOrb(Vector3 pt, float radius, GameObject target)
+    {
+        var targetPt = target.transform.position;
+        var targetRadius = target.transform.lossyScale.x; // Assume sphere
+        var distance = (pt - targetPt).magnitude;
+        
+        // Check for colloision
+        if(distance > radius + targetRadius)
+            return false;
+        
+        
+        // TODO: Do something about sphere, anything you like :)
+        return true;
+    } 
 }
