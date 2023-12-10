@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KeyboardControl : MonoBehaviour
 {
-    public Transform player;
+    Transform player;
     public Transform head;
     float headMaxRot = 60f;
     float headAccumulatedRot = 0f;
@@ -14,15 +14,25 @@ public class KeyboardControl : MonoBehaviour
 
     // Matrixes & Their source
     public List<NodePrimative> playerPrimatives = new();
-    public List<float> primativesRadius = new();
+    List<float> primativesRadius = new();
     List<Matrix4x4> playerMatrices = new();
     
     
     void Start()
     {
         player = World.instance.player.transform;
+        Debug.Assert(player);
         Debug.Assert(head);
-        Debug.Assert(playerPrimatives.Count == primativesRadius.Count);
+
+        speed *= player.lossyScale.x;
+
+        primativesRadius.Clear();
+        playerMatrices.Clear();
+        foreach(var primatives in playerPrimatives)
+        {
+            primativesRadius.Add(primatives.transform.lossyScale.x);
+            playerMatrices.Add(Matrix4x4.identity); // To prevent any unexpected error
+        }
     }
 
     void Update()

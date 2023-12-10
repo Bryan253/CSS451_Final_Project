@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 5936783616649504061}
   m_Layer: 0
   m_Name: Pillar (2)
-  m_TagString: Wall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 1747230483843973671}
   m_Layer: 0
   m_Name: Pillar (3)
-  m_TagString: Wall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1371,7 +1371,7 @@ GameObject:
   - component: {fileID: 5407011126465257821}
   m_Layer: 0
   m_Name: Pillar (1)
-  m_TagString: Wall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1600,7 +1600,7 @@ GameObject:
   - component: {fileID: 5431951817332169184}
   m_Layer: 0
   m_Name: Pillar
-  m_TagString: Wall
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

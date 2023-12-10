@@ -7,23 +7,24 @@ using UnityEngine;
 public class World : MonoBehaviour
 {
     public static World instance = null;
-    public SceneNode head = null;
+    public SceneNode baseNode = null;
     public GameObject player;
     List<GameObject> walls;
-    public List<GameObject> boundary = new();
 
     void Awake()
     {
         if(!instance)
             instance = this;
-        Debug.Assert(head);
+        Debug.Assert(baseNode);
         Debug.Assert(player);
-
-        walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
-        Debug.Assert(walls != null);
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        player.transform.position = GameObject.Find("Corner(Clone)").transform.position;
+        walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
+    }
+
     void Update()
     {
         UpdatePlayerMatrix();
@@ -32,15 +33,11 @@ public class World : MonoBehaviour
     public void UpdatePlayerMatrix()
     {
         var m = Matrix4x4.identity;
-        head.GetSelfMatrix(ref m);
+        baseNode.GetSelfMatrix(ref m);
     }
 
     public bool HasContactedTerrain(Vector3 pt, float radius)
     {
-        // Check contact with boundary
-        foreach(var b in boundary)
-            if(HasContacted(pt, radius, b))
-                return true;
         // Check contact with each wall
         foreach(var wall in walls)
             if(HasContacted(pt, radius, wall))
