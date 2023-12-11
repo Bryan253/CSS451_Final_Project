@@ -9,6 +9,8 @@ public class World : MonoBehaviour
     public static World instance = null;
     public SceneNode baseNode = null;
     public GameObject player;
+    public GameObject lightPrefab;
+    public AudioSource sfx;
     List<GameObject> walls;
     List<GameObject> orbs;
 
@@ -91,8 +93,13 @@ public class World : MonoBehaviour
         if(distance > radius + targetRadius)
             return false;
         
-        
-        // TODO: Do something about sphere, anything you like :)
+        // Prevent effect from happening consistently
+        if (target.activeSelf == true)
+        {
+            target.SetActive(false);
+            sfx.Play();
+            Instantiate(lightPrefab, target.transform.position, Quaternion.identity);
+        }
         return true;
     } 
 }
