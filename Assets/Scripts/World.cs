@@ -7,23 +7,26 @@ using UnityEngine;
 public class World : MonoBehaviour
 {
     public static World instance = null;
-    public SceneNode head = null;
+    public SceneNode baseNode = null;
     public GameObject player;
     List<GameObject> walls;
-    public List<GameObject> boundary = new();
+    List<GameObject> orbs;
 
     void Awake()
     {
         if(!instance)
             instance = this;
-        Debug.Assert(head);
+        Debug.Assert(baseNode);
         Debug.Assert(player);
-
-        walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
-        Debug.Assert(walls != null);
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        player.transform.position = GameObject.Find("Corner(Clone)").transform.position;
+        walls = GameObject.FindGameObjectsWithTag("Wall").ToList();
+        orbs = GameObject.FindGameObjectsWithTag("Orb").ToList();
+    }
+
     void Update()
     {
         UpdatePlayerMatrix();
@@ -32,25 +35,25 @@ public class World : MonoBehaviour
     public void UpdatePlayerMatrix()
     {
         var m = Matrix4x4.identity;
-        head.GetSelfMatrix(ref m);
+        baseNode.GetSelfMatrix(ref m);
     }
 
     public bool HasContactedTerrain(Vector3 pt, float radius)
     {
-        // Check contact with boundary
-        foreach(var b in boundary)
-            if(HasContacted(pt, radius, b))
+        // Check contact with orbs
+        foreach(var orb in orbs)
+            if(HasContactedOrb(pt, radius, orb))
                 return true;
+        
         // Check contact with each wall
         foreach(var wall in walls)
-            if(HasContacted(pt, radius, wall))
+            if(HasContactedWall(pt, radius, wall))
                 return true;
         
         return false;
     }
 
-    // Assumes target is a quad
-    public bool HasContacted(Vector3 pt, float radius, GameObject target)
+    bool HasContactedWall(Vector3 pt, float radius, GameObject target)
     {
         // Find distance between pt and infinte plane
         var targetPt = target.transform.position;
@@ -77,4 +80,19 @@ public class World : MonoBehaviour
         
         return true;
     }
+
+    bool HasContactedOrb(Vector3 pt, float radius, GameObject target)
+    {
+        var targetPt = target.transform.position;
+        var targetRadius = target.transform.lossyScale.x; // Assume sphere
+        var distance = (pt - targetPt).magnitude;
+        
+        // Check for colloision
+        if(distance > radius + targetRadius)
+            return false;
+        
+        
+        // TODO: Do something about sphere, anything you like :)
+        return true;
+    } 
 }
