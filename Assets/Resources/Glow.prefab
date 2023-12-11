@@ -140,6 +140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _light: {fileID: 1957434059840860878}
-  maxInten: 10
+  maxInten: 7.5
   minInten: 1
   speed: 0.5
