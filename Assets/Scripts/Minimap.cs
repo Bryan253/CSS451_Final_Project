@@ -9,6 +9,7 @@ public class Minimap : MonoBehaviour
     {
         var p = transform.position;
         p.y -= Input.GetAxis("Mouse ScrollWheel") * 5f;
+        p.y = Mathf.Clamp(p.y, 5, 50);
         transform.position = p;
     }
 }

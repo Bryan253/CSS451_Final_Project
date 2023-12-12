@@ -1,16 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class KeyboardControl : MonoBehaviour
 {
+    // Player data & Cache
     Transform player;
     public Transform head;
-    float headMaxRot = 60f;
-    float headAccumulatedRot = 0f;
     float speed = 4f;
     float rotRate = 90f;
-    float sideLength = 30f;
+
+    // Head Data
+    float headMaxRot = 60f;
+    float headAccumulatedRot = 0f;
+
+    // Joint Data
+    public List<Transform> joints = new();
+    Quaternion shoulderInitQ;
+    Quaternion elbowInitQ;
+    float jointMaxRot = 45f;
+    float currentShoulderRot = 0;
+    float currentElbowRot = 0;
 
     // Matrixes & Their source
     public List<NodePrimative> playerPrimatives = new();
@@ -25,6 +36,8 @@ public class KeyboardControl : MonoBehaviour
         Debug.Assert(head);
 
         speed *= player.lossyScale.x;
+        shoulderInitQ = joints[0].localRotation;
+        elbowInitQ = joints[2].localRotation;
 
         primativesRadius.Clear();
         playerMatrices.Clear();
@@ -38,6 +51,7 @@ public class KeyboardControl : MonoBehaviour
     void Update()
     {
         PlayerMovement();
+        ArmMovement();
         HeadMovement();
     }
 
@@ -61,14 +75,6 @@ public class KeyboardControl : MonoBehaviour
             deltaRot *= Quaternion.AngleAxis(-deltaAngle, player.up);
         if(Input.GetKey(KeyCode.D))
             deltaRot *= Quaternion.AngleAxis(deltaAngle, player.up);
-
-        // Make player only moveable in map
-        p += deltaP;
-        var clampP = p;
-        clampP.x = Mathf.Clamp(clampP.x, -sideLength / 2, sideLength / 2);
-        clampP.z = Mathf.Clamp(clampP.z, -sideLength / 2, sideLength / 2);
-        if(p != clampP)
-            deltaP += clampP - p;
 
         player.position += deltaP;
         Camera.main.transform.position += deltaP;
@@ -105,6 +111,59 @@ public class KeyboardControl : MonoBehaviour
         headAccumulatedRot = Mathf.Clamp(headAccumulatedRot, -headMaxRot, headMaxRot);
         var q = Quaternion.AngleAxis(headAccumulatedRot, head.up);
         head.localRotation = q;
+    }
+
+    void ArmMovement()
+    {
+        var dt = Time.deltaTime;
+        var deltaAngle = rotRate * dt;
+
+        var oldShoulderRot = currentShoulderRot;
+        var oldElblowRot = currentElbowRot;
+        var oldShoulderQ = joints[0].localRotation;
+        var oldElbowQ = joints[2].localRotation;
+
+        // Rotate Elbow with left / right mouse button
+        if(Input.GetKey(KeyCode.Mouse0))
+            currentElbowRot -= deltaAngle;
+        if(Input.GetKey(KeyCode.Mouse1))
+            currentElbowRot += deltaAngle;
+        currentElbowRot = Mathf.Clamp(currentElbowRot, -jointMaxRot, jointMaxRot);
+        var q = Quaternion.AngleAxis(currentElbowRot, Vector3.right);
+        q = elbowInitQ * q;
+        joints[2].localRotation = q;
+        joints[3].localRotation = q;
+
+        // Rotate Elbow with left / right mouse button
+        if(Input.GetKey(KeyCode.Space))
+            currentShoulderRot -= deltaAngle;
+        if(Input.GetKey(KeyCode.LeftShift))
+            currentShoulderRot += deltaAngle;
+        currentShoulderRot = Mathf.Clamp(currentShoulderRot, -jointMaxRot, jointMaxRot);
+        q = Quaternion.AngleAxis(currentShoulderRot, Vector3.right);
+        q = shoulderInitQ * q;
+        joints[0].localRotation = q;
+        joints[1].localRotation = q;
+        
+        UpdateAndGetPlayerMatrix();
+
+        // Check if any circle collide with walls
+        for(int i = 0; i < playerPrimatives.Count; i++)
+        {
+            // Check if target location NOT touches the terrain
+            if(!World.instance.HasContactedTerrain(playerMatrices[i].GetColumn(3), primativesRadius[i]))
+                continue;
+
+            // Revert changes if touches terrain
+            currentShoulderRot = oldShoulderRot;
+            currentElbowRot = oldElblowRot;
+            joints[0].localRotation = oldShoulderQ;
+            joints[1].localRotation = oldShoulderQ;
+            joints[2].localRotation = oldElbowQ;
+            joints[3].localRotation = oldElbowQ;
+            UpdateAndGetPlayerMatrix();
+            break;
+        }
     }
 
     void UpdateAndGetPlayerMatrix()
