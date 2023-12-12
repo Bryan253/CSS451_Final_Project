@@ -73,7 +73,7 @@
 				// Orb light calculation
 				float3 lightDir2 = normalize(lightPos2 - i.vertexWC);
 				float cos2 = clamp(dot(lightDir2, i.normal), 0, 1);
-				float distance2 = lightPos2 - i.vertexWC;
+				float distance2 = length(lightPos2 - i.vertexWC);
 				lightI2 = lightI2 * clamp((lightRange2 - distance2) / lightRange2, 0, 1);
 				result += cos1 * lightI2 * lightCol2;
 				return result;
