@@ -480,9 +480,9 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0.3
+    x: 0.0056
+    y: 0.69
+    width: 0.168
     height: 0.3
   near clip plane: 0.3
   far clip plane: 1000
@@ -591,7 +591,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769c6098e76fa3f4a96a087adf987ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1856203124}
 --- !u!1 &259518001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,6 +1429,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 1681153646}
+  joints:
+  - {fileID: 692610964}
+  - {fileID: 989640363}
+  - {fileID: 74797616}
+  - {fileID: 379172207}
   playerPrimatives:
   - {fileID: 259518002}
   - {fileID: 1860944326}
